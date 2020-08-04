@@ -1,0 +1,22 @@
+<%- include('./partials/header') %>
+<form class="form-signin">
+    <div class="text-center mb-4">
+        <img class="mb-4" src="/img/logo.png" alt="" width="72" height="72">
+    </div>
+
+    <div class="form-label-group">
+        <input type="email" id="email" class="form-control" placeholder="Email address" required autofocus>
+        <label for="email">Email address</label>
+    </div>
+
+    <div class="form-label-group">
+        <input type="password" id="password" class="form-control" placeholder="Password" required>
+        <label for="password">Password</label>
+    </div>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit" name="signinbtn" id="signinbtn">Sign in</button>
+
+    <%- include('./partials/passwordresetandforgetpasswordblock')%>
+
+</form>
+<%- include('./partials/footer') %>
