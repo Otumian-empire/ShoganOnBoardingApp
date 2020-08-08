@@ -20,7 +20,7 @@ const onboardingDB = {
             return client.query(query, [newlastname, id])
         },
         email: function (id, newemail) {
-            return client.query("UPDATE onboarding set email:$1 WHERE id=$2", [newemail, id],)
+            return client.query("UPDATE onboarding set email:$1 WHERE id=$2", [newemail, id])
         },
         password: function (id, newpassword) {
             let newpasswordhash = hashPassword(newpassword)
@@ -35,8 +35,8 @@ const onboardingDB = {
     },
     delete: function (id) {
         let query = "DELETE FROM onboarding WHERE id=$1"
-        client.query(query, [id])
+        return client.query(query, [id])
     }
 }
 
-module.exports = onboardingDB
+module.exports = { onboardingDB }
