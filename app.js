@@ -1,14 +1,15 @@
 const express = require('express')
-const onboardingController = require('./routes/onboardingroutes.js')
+const { onboardingRouter } = require("./routes/onboardingroutes.js")
 
 const app = express()
+const port = process.env.PORT || 3000
 
 app.set('view engine', 'ejs')
-app.use(express.json());
+
 app.use(express.static('./public'))
+app.use(express.urlencoded({ extended: false }))
+app.use("/", onboardingRouter)
 
-onboardingController(app)
-
-app.listen(3000, function () {
-    console.log('Server running on port 3000')
+app.listen(port, function () {
+    console.log(`Server running on port ${port}`)
 })

@@ -7,13 +7,13 @@ const client = new Client({
     host: process.env.PG_DBHOST,
     database: process.env.PG_DBNAME,
     password: process.env.PG_DBPASSWORD,
-    port: process.env.PG_DBPORT || 3000,
+    port: process.env.PG_DBPORT,
 })
 
 client.connect()
-    .then(result => {
-        console.log(`DB connected ${result}`)
+    .then(() => {
+        console.log(`DB connected`)
     })
-    .catch(err => console.log("Connection error " + err.stack))
+    .catch(err => console.log(`Connection error ${err.stack}`))
 
 module.exports = { client }
