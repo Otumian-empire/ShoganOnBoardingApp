@@ -2,11 +2,13 @@ const { onboardingDB: db } = require('../db/onboardingdb.js')
 const router = require("express").Router()
 const bcrypt = require('bcrypt')
 const validation = require('../validation/validation.js')
+const { getCode, sendEmail } = require('../utils/utils.js')
 
 
 router.post('/signup', [
     validation.validateParams(['firstname', 'lastname', 'email', 'password']),
     validation.validateResult], (req, res) => {
+
         let { firstname, lastname, email, password } = req.body
 
         bcrypt.hash(password, 12, (err, hash) => {
@@ -18,15 +20,15 @@ router.post('/signup', [
                 })
             }
 
-            db.insert(firstname, lastname, email, hash)
+            db.createUser([firstname, lastname, email, hash])
                 .then(() => {
                     return res.status(201).json({
                         'status': true,
                         'message': 'Account created sucessfully'
                     })
                 })
-                .catch(insertError => {
-                    console.log(insertError)
+                .catch(createUserErr => {
+                    console.log(createUserErr)
                     return res.status(500).json({
                         'status': false,
                         'message': 'Account creation unsucessfully'
@@ -39,9 +41,10 @@ router.post('/signup', [
 router.post('/login', [
     validation.validateParams(['email', 'password']),
     validation.validateResult], (req, res) => {
+
         let { email, password } = req.body
 
-        db.readOnePassword(email)
+        db.readOnePasswordUser(email)
             .then(result => {
                 if (result.rowCount > 0) {
                     const hash = result.rows[0].password
@@ -68,10 +71,9 @@ router.post('/login', [
 
                     })
                 } else {
-                    console.log('Unknow user, please register')
                     return res.status(403).json({
                         'status': false,
-                        'message': 'Unknown user'
+                        'message': 'Unknow user, please register'
                     })
                 }
             })
@@ -88,21 +90,82 @@ router.post('/login', [
 router.post('/forgetpassword', [
     validation.validateParams(['email']),
     validation.validateResult], (req, res) => {
-        // get email and validate it
-        // check if email exist in users table
-        // generate code and insert into forgetpassword table
-        // email code to user
+
+        const { email } = req.body
+
+        db.readOneUser(email)
+            .then(fpRes => {
+                if (fpRes.rowCount < 1)
+                    return res.status(403)
+                        .json({ 'status': false, 'message': 'Incorect credentials' })
+
+                const code = getCode()
+
+                db.createCode([email, code])
+                    .then(() => {
+
+                        console.log(`RestCode: ${code}`)
+
+                        sendEmail(email, code)
+                            .then(() => res.status(200).json({
+                                'status': true,
+                                'message': 'We have sent you an email to reset your password'
+                            }))
+                            .catch(sendEmailErr => {
+                                console.log(sendEmailErr)
+                                return res.status(500).json({ 'status': false, 'message': 'Reset error' })
+                            })
+
+                    })
+                    .catch(createCodeErr => {
+                        console.log(createCodeErr)
+                        return res.status(403).json({ 'status': true, 'message': 'Please check your email, code has been sent already' })
+                    })
+
+            })
+            .catch(fpErr => {
+                console.log(fpErr)
+                return res.status(500).json({ 'status': false, 'message': 'Reset error' })
+            })
+
     })
 
 
 router.put('/resetpassword', [
     validation.validateParams(['email', 'password', 'code']),
     validation.validateResult], (req, res) => {
-        // get email and validate it
-        // check if email is in forgetpassword Table
-        
-    })
 
+        let { email, password, code } = req.body
+
+        db.readCode(email)
+            .then(readCodeRes => {
+                if (readCodeRes.rowCount < 1)
+                    return res.status(403).json({ 'status': false, 'message': 'Please register or login' })
+
+                if (readCodeRes.rows[0].code !== code)
+                    return res.status(403).json({ 'status': false, 'message': 'Please check and enter the code again' })
+
+                db.updateUser.password([email, password])
+                    .then(() => {
+                        db.deleteCode(email)
+                            .then(() => res.status(200).json({ 'status': true, 'message': 'Reset successful' }))
+                            .catch(deleteCodeErr => {
+                                console.log(`deleteCodeErr: ${deleteCodeErr}`)
+                                return res.status(500).json({ 'status': false, 'message': 'Reset error' })
+                            })
+
+                    })
+                    .catch(updateUserErr => {
+                        console.log(`updateUserErr: ${updateUserErr}`)
+                        return res.status(500).json({ 'status': false, 'message': 'Reset error' })
+                    })
+
+            })
+            .catch(readCodeErr => {
+                console.log(`readCodeErr: ${readCodeErr}`)
+                return res.status(500).json({ 'status': false, 'message': 'Reset error' })
+            })
+    })
 
 
 module.exports = { api: router }

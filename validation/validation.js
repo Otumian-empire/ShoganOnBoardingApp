@@ -47,7 +47,6 @@ module.exports = {
                 .withMessage('Must be alphanumeric'))
         }
 
-
         return validationRules
     },
 
