@@ -11,7 +11,7 @@ module.exports = {
                 .isAlpha()
                 .withMessage('Must be only alphabetical chars')
                 .isLength({ min: 2 })
-                .withMessage('Must be at least 5 chars long'))
+                .withMessage('Must be at least 2 chars long'))
         }
 
         if (params.includes('lastname')) {
@@ -20,7 +20,7 @@ module.exports = {
                 .isAlpha()
                 .withMessage('Must be only alphabetical chars')
                 .isLength({ min: 2 })
-                .withMessage('Must be at least 5 chars long'))
+                .withMessage('Must be at least 2 chars long'))
         }
 
         if (params.includes('email')) {

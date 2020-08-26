@@ -13,7 +13,7 @@ async function sendEmail(email, code) {
     const mailOptions = {
         from: 'estatefairy@server.com',
         to: email,
-        subject: 'Estatefairy Forget Password code',
+        subject: 'ShoganOnBoarding App Forget Password code',
         text: `code: ${code}`,
         html: `<p>code: <strong>${code}<strong></p>`
     }

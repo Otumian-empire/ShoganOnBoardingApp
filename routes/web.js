@@ -9,6 +9,10 @@ router.get('/signup', (req, res) => {
     res.render('signup')
 })
 
+router.get('/login', (req, res) => {
+    res.render('login')
+})
+
 router.get('/forgetpassword', (req, res) => {
     res.render('forgetpassword')
 })
@@ -18,11 +22,11 @@ router.get('/resetpassword', (req, res) => {
 })
 
 router.get('/success', (req, res) => {
-    res.render('./status/success')
+    res.render('./status/success', { 'message': req.query.message })
 })
 
 router.get('/error', (req, res) => {
-    res.render('./status/error')
+    res.render('./status/error', { 'message': req.query.message })
 })
 
 
