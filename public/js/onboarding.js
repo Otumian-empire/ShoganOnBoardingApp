@@ -104,7 +104,35 @@ jQuery(document).ready(($) => {
         $('#msg').text("An error occured while processing credentials")
       }
     })
+  })
 
+  $('#resetpassword-form').on('submit', e => {
+    e.preventDefault()
 
+    let data_set = {
+      'email': $('#email').val().trim(),
+      'password': $('#password').val().trim(),
+      'code': $('#code').val().trim()
+    }
+
+    $.ajax({
+      url: '/api/resetpassword',
+      method: 'PUT',
+      dataType: 'json',
+      cache: false,
+      data: data_set,
+      success: res => {
+        if (res.status === true) {
+          location.href = `/?message=${res.message}`
+        } else {
+          $('#msg').toggleClass('d-none')
+          $('#msg').text(res.message)
+        }
+      },
+      error: err => {
+        $('#msg').toggleClass('d-none')
+        $('#msg').text("An error occured while processing credentials")
+      }
+    })
   })
 })

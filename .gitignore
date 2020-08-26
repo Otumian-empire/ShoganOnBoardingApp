@@ -3,3 +3,6 @@ node_modules
 onboarding.sql
 public/img
 db/encrypt.js
+postman*
+views/status/
+
