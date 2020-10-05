@@ -1,6 +1,42 @@
 jQuery(document).ready(($) => {
 
-  $('#msg').addClass('d-none')
+  function error_body(err) {
+    console.log(err.responseJSON)
+
+    $('#msg').css('display', 'block')
+
+    let message = "Please check your credentials entered"
+
+    if (err.responseJSON.message) {
+      message = err.responseJSON.message
+    }
+    else if (err.responseJSON.errors) {
+
+      const errors = err.responseJSON.errors
+      const first_key = Object.keys(errors[0])[0]
+      const first_value = Object.values(errors[0])[0]
+
+      message = first_key + " " + first_value
+    }
+
+    $('#msg').text(message)
+  }
+
+  function success_body(res, redr_path) {
+    if (res.status === true) {
+      $('#msg').css('display', 'none')
+
+      location.href = `${redr_path}?message=${res.message}`
+    }
+    else {
+      console.log(res.message)
+      $('#msg').css('display', 'block')
+      $('#msg').text(res.message)
+    }
+  }
+
+
+  $('#msg').css('display', 'none')
 
   $('#signup-form').on('submit', e => {
     e.preventDefault()
@@ -12,40 +48,17 @@ jQuery(document).ready(($) => {
       'password': $('#password').val().trim()
     }
 
+    const target = '/api/signup'
+    const redr_path = '/web/login'
+
     $.ajax({
-      url: '/api/signup',
+      url: target,
       method: 'POST',
       dataType: 'json',
       cache: false,
       data: data_set,
-      success: res => {
-        if (res.status === true) {
-          location.href = `/web/login?message=${res.message}`
-        } else {
-          $('#msg').toggleClass('d-none')
-          $('#msg').text(res.message)
-        }
-      },
-      error: err => {
-        // let message = ''
-        $('#msg').toggleClass('d-none')
-        $('#msg').text("An error occured while processing credentials")
-
-        // if (typeof err.responseJSON.message) {
-        //   message = err.responseJSON.message
-        //   $('#msg').text(message)
-        // } else if (err.responseJSON.errors) {
-        //   let firstError = err.responseJSON.errors[0]
-        //   let key = Object.keys(firstError)[0]
-        //   let value = firstError[key]
-        //   message = key + " " + value + ""
-        //   $('#msg').text(message)
-        // } else {
-        //   message = "Please check your credentials entered"
-        //   $('#msg').text(message)
-        // }
-
-      }
+      success: res => success_body(res, redr_path),
+      error: err => error_body(err)
     })
   })
 
@@ -57,24 +70,17 @@ jQuery(document).ready(($) => {
       'password': $('#password').val().trim()
     }
 
+    const target = '/api/login'
+    const redr_path = '/web/forgetpassword'
+
     $.ajax({
-      url: '/api/login',
+      url: target,
       method: 'POST',
       dataType: 'json',
       cache: false,
       data: data_set,
-      success: res => {
-        if (res.status === true) {
-          location.href = `/web/forgetpassword?message=${res.message}`
-        } else {
-          $('#msg').toggleClass('d-none')
-          $('#msg').text(res.message)
-        }
-      },
-      error: err => {
-        $('#msg').toggleClass('d-none')
-        $('#msg').text("An error occured while processing credentials")
-      }
+      success: res => success_body(res, redr_path),
+      error: err => error_body(err)
     })
   })
 
@@ -85,24 +91,17 @@ jQuery(document).ready(($) => {
       'email': $('#email').val().trim(),
     }
 
+    const target = '/api/forgetpassword'
+    const redr_path = '/web/resetpassword'
+
     $.ajax({
-      url: '/api/forgetpassword',
+      url: target,
       method: 'POST',
       dataType: 'json',
       cache: false,
       data: data_set,
-      success: res => {
-        if (res.status === true) {
-          location.href = `/web/resetpassword?message=${res.message}`
-        } else {
-          $('#msg').toggleClass('d-none')
-          $('#msg').text(res.message)
-        }
-      },
-      error: err => {
-        $('#msg').toggleClass('d-none')
-        $('#msg').text("An error occured while processing credentials")
-      }
+      success: res => success_body(res, redr_path),
+      error: err => error_body(err)
     })
   })
 
@@ -115,24 +114,17 @@ jQuery(document).ready(($) => {
       'code': $('#code').val().trim()
     }
 
+    const target = '/api/resetpassword'
+    const redr_path = '/'
+    
     $.ajax({
-      url: '/api/resetpassword',
+      url: target,
       method: 'PUT',
       dataType: 'json',
       cache: false,
       data: data_set,
-      success: res => {
-        if (res.status === true) {
-          location.href = `/?message=${res.message}`
-        } else {
-          $('#msg').toggleClass('d-none')
-          $('#msg').text(res.message)
-        }
-      },
-      error: err => {
-        $('#msg').toggleClass('d-none')
-        $('#msg').text("An error occured while processing credentials")
-      }
+      success: res => success_body(res, redr_path),
+      error: err => error_body(err)
     })
   })
 })
