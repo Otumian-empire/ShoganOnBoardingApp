@@ -2,40 +2,39 @@ const express = require("express");
 const { api } = require("./routes/api.js");
 const { web } = require("./routes/web.js");
 
-const swaggerJSDoc = require("swagger-jsdoc");
+// const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express");
+const swaggerJSON = require("./swagger.json");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.set("view engine", "ejs");
-
 app.use(express.static("./public"));
 app.use(express.urlencoded({ extended: false }));
-app.use("/api", api);
-app.use("/web", web);
 
 // swagger definition
-var swaggerDefinition = {
-  info: {
-    title: "ShoganOnBoarding API",
-    version: "1.0.0",
-    description:
-      "Hello i am ShoganOnBoarding .",
-  },
-  host: "localhost:3000",
-  basePath: "/api",
-};
-
-// options for swagger jsdoc
-var options = {
-  swaggerDefinition: swaggerDefinition, // swagger definition
-  // apis: ['./configurations/UrlMapping.js'], // path where API specification are written
-  apis: ["./routes/api.js"],
-  // apis: [],
-};
+// var swaggerOptions = {
+//   definition: {
+//     openapi: "3.0.0",
+//     info: {
+//       title: "ShoganOnBoarding API",
+//       version: "1.0.0",
+//       description: "Hello i am ShoganOnBoarding .",
+//       servers: ["http://localhost:3000"],
+//     },
+//     host: "localhost:3000",
+//     basePath: "/",
+//   },
+//   apis: ["./routes/api.js"],
+// };
 
 // initialize swaggerJSDoc
-var swaggerSpec = swaggerJSDoc(options);
+// var swaggerSpec = swaggerJSDoc(swaggerOptions);
+
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerJSON));
+app.use("/api", api);
+app.use("/web", web);
 
 app.get("/", (req, res) => {
   res.render("index");

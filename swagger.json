@@ -1,0 +1,65 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ShoganOnBoarding API",
+    "version": "1.0.0",
+    "description": "Hello i am ShoganOnBoarding ."
+  },
+  "schemes": ["http"],
+  "host": "localhost:3000",
+  "basePath": "/api",
+  "paths": {
+    "/api/signup": {
+      "post": {
+        "tags": [
+          {
+            "name": "User"
+          }
+        ],
+        "summary": "create user",
+        "description": "create user",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "employee created succesfully"
+          },
+          "500": {
+            "description": "failure in creating employee"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "firstname": {
+          "type": "string",
+          "required": true
+        },
+        "lastname": {
+          "type": "string",
+          "required": true
+        },
+        "email": {
+          "type": "string",
+          "required": true
+        },
+        "password": {
+          "type": "string",
+          "format": "password",
+          "required": true
+        }
+      }
+    }
+  }
+}

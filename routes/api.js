@@ -4,69 +4,6 @@ const bcrypt = require("bcrypt");
 const validation = require("../validation/validation.js");
 const { getCode, sendEmail } = require("../utils/utils.js");
 
-/**
- * @swagger
- *
- * definitions:
- *   User:
- *     type: object
- *     properties:
- *       firstName:
- *         type: string
- *         required: true
- *       lastName:
- *         type: string
- *         required: true
- *       email:
- *         type: string
- *         required: true
- *       password:
- *         type: string
- *         format: password
- *         required: true
- */
-
-/**
- * @swagger
- *
- * /signup:
- *   post:
- *     tags:
- *       - User
- *     description: Create user
- *     schema:
- *       $ref: '#/definitions/User'
- *     produces:
- *       - application/x-www-form-urlencoded
- *     parameters:
- *       - name: firstname
- *         description: Users first name
- *         in: body
- *         required: true
- *       - name: lastname
- *         description: Users last name
- *         in: body
- *         required: true
- *       - name: email
- *         description: Users email
- *         in: body
- *         required: true
- *       - name: password
- *         description: Users password
- *         in: body
- *         required: true
- *     responses:
- *       200:
- *         - description:
- *             status: true
- *             message: Account creation sucessfully
- *       422:
- *         - description:
- *           firstname:
- *             - Invalid value
- *             - Must be only alphabetical chars
- *             - Must be at least 2 chars long
- */
 router.post(
   "/signup",
   [
@@ -105,34 +42,34 @@ router.post(
   }
 );
 
-/**
- * @swagger
- * /login:
- *   post:
- *     tags:
- *       - User
- *     description: Login user
- *     produces:
- *       - application/x-www-form-urlencoded
- *     schema:
- *       $ref: '#/definitions/User'
- *     parameters:
- *       - name: email
- *         description: Users email
- *         in: body
- *         type: string
- *         required: true
- *       - name: password
- *         description: Users password
- *         in: body
- *         type: string
- *         required: true
- *     responses:
- *       200:
- *         - description:
- *             status: true
- *             message: Login sucessful
- */
+// /**
+//  * @swagger
+//  * /login:
+//  *   post:
+//  *     tags:
+//  *       - User
+//  *     description: Login user
+//  *     produces:
+//  *       - application/x-www-form-urlencoded
+//  *     schema:
+//  *       $ref: '#/definitions/User'
+//  *     parameters:
+//  *       - name: email
+//  *         description: Users email
+//  *         in: body
+//  *         type: string
+//  *         required: true
+//  *       - name: password
+//  *         description: Users password
+//  *         in: body
+//  *         type: string
+//  *         required: true
+//  *     responses:
+//  *       200:
+//  *         - description:
+//  *             status: true
+//  *             message: Login sucessful
+//  */
 router.post(
   "/login",
   [validation.validateParams(["email", "password"]), validation.validateResult],
@@ -183,26 +120,26 @@ router.post(
   }
 );
 
-/**
- * @swagger
- * /forgetpassword:
- *   post:
- *     tags:
- *       - User
- *     description: Login user
- *     produces:
- *       - application/x-www-form-urlencoded
- *     parameters:
- *       - name: email
- *         description: Users email
- *         in: body
- *         required: true
- *     responses:
- *       200:
- *         - description:
- *             status: true
- *             message: We have sent you an email to reset your password
- */
+// /**
+//  * @swagger
+//  * /forgetpassword:
+//  *   post:
+//  *     tags:
+//  *       - User
+//  *     description: Login user
+//  *     produces:
+//  *       - application/x-www-form-urlencoded
+//  *     parameters:
+//  *       - name: email
+//  *         description: Users email
+//  *         in: body
+//  *         required: true
+//  *     responses:
+//  *       200:
+//  *         - description:
+//  *             status: true
+//  *             message: We have sent you an email to reset your password
+//  */
 router.post(
   "/forgetpassword",
   [validation.validateParams(["email"]), validation.validateResult],
@@ -252,34 +189,34 @@ router.post(
   }
 );
 
-/**
- * @swagger
- * /resetpassword:
- *   put:
- *     tags:
- *       - User
- *     description: Reset user password
- *     produces:
- *       - application/x-www-form-urlencoded
- *     parameters:
- *       - name: email
- *         description: Users email
- *         in: body
- *         required: true
- *       - name: passwword
- *         description: Users new password
- *         in: body
- *         required: true
- *       - name: code
- *         description: Users code for password reset
- *         in: body
- *         required: true
- *     responses:
- *       200:
- *         - description:
- *             status: true
- *             message: Reset successful
- */
+// /**
+//  * @swagger
+//  * /resetpassword:
+//  *   put:
+//  *     tags:
+//  *       - User
+//  *     description: Reset user password
+//  *     produces:
+//  *       - application/x-www-form-urlencoded
+//  *     parameters:
+//  *       - name: email
+//  *         description: Users email
+//  *         in: body
+//  *         required: true
+//  *       - name: passwword
+//  *         description: Users new password
+//  *         in: body
+//  *         required: true
+//  *       - name: code
+//  *         description: Users code for password reset
+//  *         in: body
+//  *         required: true
+//  *     responses:
+//  *       200:
+//  *         - description:
+//  *             status: true
+//  *             message: Reset successful
+//  */
 router.put(
   "/resetpassword",
   [
