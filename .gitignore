@@ -5,4 +5,5 @@ public/img
 db/encrypt.js
 postman*
 views/status/
-
+package-lock.json
+yarn.lock
